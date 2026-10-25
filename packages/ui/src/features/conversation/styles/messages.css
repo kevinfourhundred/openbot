@@ -199,6 +199,29 @@
   );
 }
 
+/* The reader's messages use the recipient's avatar color, as in the mobile app. The avatar
+ * palette has bright fills, so the text stays dark in both app themes. */
+.ui-bubble.message-bubble-own {
+  --openbot-text-on-light: var(--openbot-paper-text);
+  --openbot-text-muted-on-light: var(--openbot-paper-text-muted);
+  --openbot-text-dim-on-light: var(--openbot-paper-text-dim);
+  --openbot-border-on-light: var(--openbot-paper-border);
+  color: var(--openbot-paper-text);
+}
+
+.ui-bubble.message-bubble-own > .ui-bubble-content {
+  background: var(--message-agent-color);
+}
+
+.ui-bubble.message-bubble-own[data-author="user"] .message-reply-context {
+  border-left-color: var(--openbot-paper-border);
+  color: var(--openbot-paper-text);
+}
+
+.message-bubble-own .message-markdown :is(blockquote, del) {
+  color: inherit;
+}
+
 .message-action-button {
   display: grid;
   width: 24px;

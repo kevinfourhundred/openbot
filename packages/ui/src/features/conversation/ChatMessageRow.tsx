@@ -39,6 +39,8 @@ export interface ChatMessageAuthor {
 export interface ChatMessageRowProps {
   message: AgentMessage;
   author: ChatMessageAuthor;
+  /** The recipient agent's avatar color for the reader's own messages in an agent chat. */
+  userBubbleColor?: string | undefined;
   /**
    * Whether the face stands beside the bubble and the name above it. The agent chat never shows a
    * face - one chat has one agent, and its name is in the header - but names another person once
@@ -201,7 +203,11 @@ export function ChatMessageRow(props: ChatMessageRowProps): JSX.Element {
         </Show>
         <div class="message-shell">
           <Bubble
-            class={member() ? "message-bubble-member" : undefined}
+            class={{
+              "message-bubble-member": member(),
+              "message-bubble-own": own() && !!props.userBubbleColor,
+            }}
+            style={own() && props.userBubbleColor ? `--message-agent-color: ${props.userBubbleColor}` : undefined}
             align={person() ? "end" : "start"}
             variant={variant()}
             data-author={person() ? "user" : "assistant"}

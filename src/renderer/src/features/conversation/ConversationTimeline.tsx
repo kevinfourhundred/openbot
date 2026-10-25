@@ -3,6 +3,7 @@ import { chatVisualReply } from "@openbot/contracts/chat-visual";
 import type { ConversationMessageSender, MessageReaction } from "@openbot/contracts/ipc";
 import type { ConversationUiBlock } from "@openbot/contracts/ui-blocks";
 import { Button } from "@openbot/ui";
+import { avatarHeadColor } from "@openbot/ui/bloub-avatar";
 import type { AgentMessage, ChatActionMarkerModel } from "@openbot/ui/data";
 import { ChannelActivityIndicator } from "@openbot/ui/features/channels/ChannelActivityIndicator";
 import { AgentActivityIndicator } from "@openbot/ui/features/conversation/AgentActivity";
@@ -1200,6 +1201,11 @@ export function ConversationTimeline() {
                           <ChatMessageRow
                             message={message() ?? initialMessage}
                             author={author()}
+                            userBubbleColor={
+                              !channel && props.agent
+                                ? avatarHeadColor(props.agent.avatarSeed, props.agent.avatarHue)
+                                : undefined
+                            }
                             showAuthor={
                               author().kind === "member" || (channel && author().kind === "agent")
                                 ? !continuesRun()
