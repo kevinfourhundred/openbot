@@ -7,13 +7,13 @@
   flex-direction: column;
   background: var(--openbot-bg-canvas);
   transition: padding-right var(--panel-resize-duration, var(--openbot-duration-overlay)) cubic-bezier(0.22, 1, 0.36, 1);
-  --conversation-column-width: 1440px;
+  --conversation-column-width: 880px;
 }
 
 /*
  * On a very wide screen the chat stops at a column and centers in the pane, so a reply and the
- * user's message stay near each other. A laptop window is narrower than the column and shows the
- * chat at full width. The scroll area and the composer keep the pane width, so the scroll bar stays
+ * user's message stay near each other. A pane narrower than the column shows the chat at full
+ * width. The scroll area and the composer keep the pane width, so the scroll bar stays
  * at the pane edge.
  */
 .conversation-panel > .conversation-scroll > .virtual-chat-list {
