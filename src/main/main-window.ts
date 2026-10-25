@@ -57,7 +57,7 @@ import type { RemoteWorkflowError } from "./remote-service-effects";
 import { sendToRenderer } from "./renderer-ipc";
 import { isTrustedRendererUrl } from "./trusted-renderer";
 import type { UpdateService } from "./update-service";
-import { followAppearance, followWindowGlass, windowBackgroundColor } from "./window-appearance";
+import { followAppearance, followWindowGlass, linuxTitleBarOptions, windowBackgroundColor } from "./window-appearance";
 
 /** The dark background of the main and setup windows, under the page's own canvas. */
 const MAIN_WINDOW_DARK_BACKGROUND = "#0b0d0e";
@@ -174,7 +174,7 @@ export function createMainWindowController({
         ? { titleBarStyle: "hidden" as const, trafficLightPosition: { x: 12, y: 13 } }
         : // Windows and Linux draw the application menu as a bar under the title bar. It stays set, so
           // its shortcuts work, and the Alt key shows it.
-          { autoHideMenuBar: true }),
+          { autoHideMenuBar: true, ...linuxTitleBarOptions() }),
       webPreferences: {
         preload: join(__dirname, "../preload/index.cjs"),
         contextIsolation: true,
@@ -276,7 +276,7 @@ export function createMainWindowController({
       icon: appIconPath,
       ...(process.platform === "darwin"
         ? { titleBarStyle: "hidden" as const, trafficLightPosition: { x: 12, y: 13 } }
-        : { autoHideMenuBar: true }),
+        : { autoHideMenuBar: true, ...linuxTitleBarOptions() }),
       webPreferences: {
         preload: join(__dirname, "../preload/index.cjs"),
         contextIsolation: true,

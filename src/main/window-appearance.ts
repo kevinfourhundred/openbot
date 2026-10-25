@@ -3,10 +3,17 @@ import {
   DEFAULT_APP_APPEARANCE,
   DEFAULT_TRANSPARENT_WINDOW,
 } from "@openbot/contracts/app-appearance";
-import { type BrowserWindow, nativeTheme } from "electron";
+import { type BrowserWindow, type BrowserWindowConstructorOptions, nativeTheme } from "electron";
 
 /** The light canvas, `--openbot-bg-canvas` in `tokens-light.css`, so a light window opens without a dark frame. */
 const LIGHT_WINDOW_BACKGROUND = "#f5f5f6";
+
+// These colors match --openbot-bg-frame and --openbot-text-primary in the brand tokens.
+const DARK_WINDOW_FRAME = "#0d0d0d";
+const LIGHT_WINDOW_FRAME = "#e8e8eb";
+const DARK_WINDOW_SYMBOL = "#ffffff";
+const LIGHT_WINDOW_SYMBOL = "#141414";
+const LINUX_TITLE_BAR_HEIGHT = 28;
 
 /** The macOS material behind a transparent main window. The page paints its own tint over it. */
 const GLASS_VIBRANCY = "under-window";
@@ -32,8 +39,25 @@ export function setWindowAppearance(preference: AppAppearancePreference): void {
 
 /** The background a window shows before its page paints, and around it while it resizes. */
 export function windowBackgroundColor(darkColor: string): string {
-  const dark = current.appearance === "system" ? nativeTheme.shouldUseDarkColors : current.appearance === "dark";
-  return dark ? darkColor : LIGHT_WINDOW_BACKGROUND;
+  return usesDarkAppearance() ? darkColor : LIGHT_WINDOW_BACKGROUND;
+}
+
+function usesDarkAppearance(): boolean {
+  return current.appearance === "system" ? nativeTheme.shouldUseDarkColors : current.appearance === "dark";
+}
+
+function linuxTitleBarOverlay() {
+  const dark = usesDarkAppearance();
+  return {
+    color: dark ? DARK_WINDOW_FRAME : LIGHT_WINDOW_FRAME,
+    symbolColor: dark ? DARK_WINDOW_SYMBOL : LIGHT_WINDOW_SYMBOL,
+    height: LINUX_TITLE_BAR_HEIGHT,
+  };
+}
+
+/** Use Electron's window controls inside a compact bar on Linux. */
+export function linuxTitleBarOptions(): Pick<BrowserWindowConstructorOptions, "titleBarStyle" | "titleBarOverlay"> {
+  return process.platform === "linux" ? { titleBarStyle: "hidden", titleBarOverlay: linuxTitleBarOverlay() } : {};
 }
 
 /** Keeps an opaque window's background on the current appearance until the window closes. */
@@ -60,6 +84,7 @@ export function followWindowGlass(window: BrowserWindow, darkColor: string): voi
       window.setVibrancy(glass ? GLASS_VIBRANCY : null);
     }
     window.setBackgroundColor(glass ? "#00000000" : windowBackgroundColor(darkColor));
+    if (process.platform === "linux") window.setTitleBarOverlay(linuxTitleBarOverlay());
   };
   update();
   follow(window, update);

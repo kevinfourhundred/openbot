@@ -781,3 +781,15 @@
 .app-frame-chat-window.app-frame-platform-darwin .conversation-header {
   padding-left: 76px;
 }
+
+/* The full browser is portaled to body, outside the root that reserves the Linux window bar. */
+body:has(.desktop-window-root) .browser-full-view,
+body:has(.desktop-window-root) .browser-expanded-backdrop {
+  top: env(titlebar-area-height, 0px);
+}
+
+/* Setup fills the root below the window bar, rather than the full viewport. */
+.desktop-window-root .account-login-screen,
+.desktop-window-root .initial-setup-screen {
+  min-height: 100%;
+}

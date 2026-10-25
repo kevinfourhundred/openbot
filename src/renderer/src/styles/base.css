@@ -12,6 +12,26 @@ body,
   overflow: hidden;
 }
 
+/* Electron supplies this height only for a window with controls over the page. The bar takes
+ * no space in the web client, helper windows, macOS, Windows, or full screen. */
+#root.desktop-window-root {
+  position: relative;
+  height: calc(100% - env(titlebar-area-height, 0px));
+  margin-top: env(titlebar-area-height, 0px);
+}
+
+#root.desktop-window-root::before {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--openbot-layer-toast);
+  width: 100%;
+  height: env(titlebar-area-height, 0px);
+  background: var(--openbot-bg-frame);
+  content: "";
+  -webkit-app-region: drag;
+}
+
 body {
   background: var(--openbot-bg-canvas);
   color: var(--openbot-text-primary);

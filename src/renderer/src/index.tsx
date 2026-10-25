@@ -15,6 +15,8 @@ if (!root) {
   throw new Error("Renderer root element was not found.");
 }
 
+root.classList.add("desktop-window-root");
+
 // A startup mark for `dev:bench`, after the bundle is parsed.
 performance.mark("openbot:renderer-start");
 installPointerFocusGuard();
